@@ -15,7 +15,14 @@ class ProduitModel extends DbConnect
     {
         try {
             // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("SELECT * FROM com_produit WHERE id_produit = :id_produit");
+            $this->request = $this->connection->prepare("SELECT
+                                                             com_produit.*,
+                                                             com_categorie.categorie AS categorie
+                                                         FROM
+                                                             com_produit
+                                                         INNER JOIN com_categorie ON com_produit.id_categorie = com_categorie.id_categorie
+                                                         WHERE com_produit.id_produit = :id_produit");
+
             $this->request->bindValue(':id_produit', $readProduit->getId_produit());
 
             // EXECUTION DE LA REQUETE SQL
@@ -39,7 +46,12 @@ class ProduitModel extends DbConnect
     {
         try {
             // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("SELECT * FROM com_produit");
+            $this->request = $this->connection->prepare("SELECT
+                                                            com_produit.*,
+                                                            com_categorie.categorie AS categorie
+                                                        FROM
+                                                            com_produit
+                                                        INNER JOIN com_categorie ON com_produit.id_categorie = com_categorie.id_categorie");
 
             // EXECUTION DE LA REQUETE SQL
             $this->request->execute();
