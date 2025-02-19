@@ -4,29 +4,28 @@
 require_once "../App/Core/DbConnect.php";
 
 ///////////////////////////////////////
-// CLASSE MODEL DE L'ENTITE CREATION //
+// CLASSE MODEL DE L'ENTITE PRODUIT //
 ///////////////////////////////////////
-class CreationModel extends DbConnect
+class ProduitModel extends DbConnect
 {
     ///////////////////////////////////////////
-    // METHODE POUR LIRE UNE CREATION EN BDD //
+    // METHODE POUR LIRE UNE PRODUIT EN BDD //
     ///////////////////////////////////////////
-    public function read(Creation $readCreation)
+    public function read(Produit $readProduit)
     {
         try {
             // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("SELECT * FROM creation WHERE id_creation = :id_creation");
-            $this->request->bindValue(':id_creation', $readCreation->getId_creation());
+            $this->request = $this->connection->prepare("SELECT * FROM com_produit WHERE id_produit = :id_produit");
+            $this->request->bindValue(':id_produit', $readProduit->getId_produit());
 
             // EXECUTION DE LA REQUETE SQL
             $this->request->execute();
 
             // FORMATAGE DU RESULTAT DE LA REQUETE
-            $creation = $this->request->fetch();
+            $produit = $this->request->fetch();
 
             // RETOUR DU RESULTAT
-            return $creation;
-
+            return $produit;
         } catch (PDOException $e) {
             //echo $e->getMessage();
             //die;
@@ -34,41 +33,40 @@ class CreationModel extends DbConnect
     }
 
     ////////////////////////////////////////////
-    // METHODE POUR LIRE LES CREATIONS EN BDD //
+    // METHODE POUR LIRE LES PRODUITS EN BDD //
     ////////////////////////////////////////////
     public function readAll()
     {
         try {
             // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("SELECT * FROM creation");
+            $this->request = $this->connection->prepare("SELECT * FROM com_produit");
 
             // EXECUTION DE LA REQUETE SQL
             $this->request->execute();
 
             // FORMATAGE DU RESULTAT DE LA REQUETE EN TABLEAU
-            $creations = $this->request->fetchAll();
+            $produits = $this->request->fetchAll();
 
             // RETOUR DES RESULTATS
-            return $creations;
-            
+            return $produits;
         } catch (PDOException $e) {
             //echo $e->getMessage();
             //die;
         }
     }
-
+    /*
     ////////////////////////////////////////////
-    // METHODE POUR CREER UNE CREATION EN BDD //
+    // METHODE POUR CREER UNE PRODUIT EN BDD //
     ////////////////////////////////////////////
-    public function create(Creation $addCreation)
+    public function create(Produit $addProduit)
     {
         try {
             // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("INSERT INTO creation (title, description, created_at)
+            $this->request = $this->connection->prepare("INSERT INTO produit (title, description, created_at)
                 VALUES (:title, :description, :created_at)");
-            $this->request->bindValue(':title', $addCreation->getTitle());
-            $this->request->bindValue(':description', $addCreation->getDescription());
-            $this->request->bindValue(':created_at', $addCreation->getCreated_at());
+            $this->request->bindValue(':title', $addProduit->getTitle());
+            $this->request->bindValue(':description', $addProduit->getDescription());
+            $this->request->bindValue(':created_at', $addProduit->getCreated_at());
 
             // EXECUTION DE LA REQUETE SQL
             return $this->request->execute();
@@ -80,21 +78,21 @@ class CreationModel extends DbConnect
     }
 
     ///////////////////////////////////////////////////
-    // METHODE DE MODIFICATION D'UNE CREATION EN BDD //
+    // METHODE DE MODIFICATION D'UNE PRODUIT EN BDD //
     ///////////////////////////////////////////////////
-    public function update(Creation $majCreation)
+    public function update(Produit $majProduit)
     {
         try {
             // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("UPDATE creation SET
+            $this->request = $this->connection->prepare("UPDATE produit SET
                 title = :title,
                 description = :description,
                 created_at = :created_at
-                WHERE id_creation = :id_creation");
-            $this->request->bindValue(':id_creation', $majCreation->getId_creation());
-            $this->request->bindValue(':title', $majCreation->getTitle());
-            $this->request->bindValue(':description', $majCreation->getDescription());
-            $this->request->bindValue(':created_at', $majCreation->getCreated_at());
+                WHERE id_produit = :id_produit");
+            $this->request->bindValue(':id_produit', $majProduit->getId_produit());
+            $this->request->bindValue(':title', $majProduit->getTitle());
+            $this->request->bindValue(':description', $majProduit->getDescription());
+            $this->request->bindValue(':created_at', $majProduit->getCreated_at());
 
             // EXECUTION DE LA REQUETE SQL
             return $this->request->execute();
@@ -106,14 +104,14 @@ class CreationModel extends DbConnect
     }
 
     //////////////////////////////////////////////////
-    // METHODE DE SUPPRESSION D'UNE CREATION EN BDD //
+    // METHODE DE SUPPRESSION D'UNE PRODUIT EN BDD //
     //////////////////////////////////////////////////
-    public function delete(Creation $delCreation)
+    public function delete(Produit $delProduit)
     {
         try {
             // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("DELETE FROM creation WHERE id_creation = :id_creation");
-            $this->request->bindValue(':id_creation', $delCreation->getId_creation());
+            $this->request = $this->connection->prepare("DELETE FROM produit WHERE id_produit = :id_produit");
+            $this->request->bindValue(':id_produit', $delProduit->getId_produit());
 
             // EXECUTION DE LA REQUETE SQL ET RETOUR DE L'EXECUTION
             return $this->request->execute();
@@ -123,4 +121,5 @@ class CreationModel extends DbConnect
             //die;
         }
     }
+        */
 }

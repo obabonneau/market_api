@@ -1,16 +1,16 @@
 <?php
 
 // UTILISATION DE CLASSES
-require_once "..app/Entities/Creation.php";
-require_once "..app/Models/CreationModel.php";
+require_once "../app/Entities/Produit.php";
+require_once "../app/Models/ProduitModel.php";
 
 ////////////////////////////////////////////
-// CLASSE CONTROLEUR DE L'ENTITE CREATION //
+// CLASSE CONTROLEUR DE L'ENTITE PRODUIT //
 ////////////////////////////////////////////
-class CreationController
+class ProduitController
 {
     ///////////////////////////////////////
-    // METHODE POUR LISTER LES CREATIONS //
+    // METHODE POUR LISTER LES PRODUITS //
     ///////////////////////////////////////
     public function list()
     {
@@ -22,25 +22,24 @@ class CreationController
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
         if ($_SERVER["REQUEST_METHOD"] === "GET") {
-        
-            $readCreationModel = new CreationModel();
-            $creations = $readCreationModel->readAll();
-        
-            if ($creations) {
+
+            $readProduitModel = new ProduitModel();
+            $produits = $readProduitModel->readAll();
+
+            if ($produits) {
                 http_response_code(200); // 200 OK
-                echo json_encode($creations);
+                echo json_encode($produits);
             } else {
                 http_response_code(404); // 404 Not Found
-                echo json_encode(["message" => "Aucunes créations trouvées !"]);
+                echo json_encode(["message" => "Aucuns produits trouvés !"]);
             }
         } else {
             http_response_code(405); // 405 Method Not Allowed
             echo json_encode(["message" => "Méthode non autorisée !"]);
         }
     }
-
     ////////////////////////////////////////
-    // METHODE POUR AFFICHER UNE CREATION //
+    // METHODE POUR AFFICHER UNE PRODUIT //
     ////////////////////////////////////////
     public function show()
     {
@@ -52,36 +51,36 @@ class CreationController
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
         if ($_SERVER["REQUEST_METHOD"] === "GET") {
-        
-            $id_creation = $_GET["id_creation"] ?? null;
 
-            if ($id_creation) {
+            $id_produit = $_GET["id_produit"] ?? null;
 
-                $readCreation = new Creation();
-                $readCreation->setId_creation($id_creation);
+            if ($id_produit) {
 
-                $readCreationModel = new CreationModel();
-                $creation = $readCreationModel->read($readCreation);
+                $readProduit = new Produit();
+                $readProduit->setId_produit($id_produit);
 
-                if ($creation) {
+                $readProduitModel = new ProduitModel();
+                $produit = $readProduitModel->read($readProduit);
+
+                if ($produit) {
                     http_response_code(200); // 200 OK
-                    echo json_encode($creation);
+                    echo json_encode($produit);
                 } else {
                     http_response_code(404); // 404 Not Found
-                    echo json_encode(["message" => "Création introuvable !"]);
+                    echo json_encode(["message" => "Produit introuvable !"]);
                 }
             } else {
                 http_response_code(400); // 400 Bad Request
                 echo json_encode(["message" => "Paramètres manquants !"]);
             }
-        } else {   
+        } else {
             http_response_code(405); // 405 Method Not Allowed
             echo json_encode("ERREUR : Méthode non autorisée !");
         }
     }
-
+    /*
     /////////////////////////////////////
-    // METHODE POUR CREER UNE CREATION //
+    // METHODE POUR CREER UNE PRODUIT //
     /////////////////////////////////////
     public function create()
     {
@@ -103,13 +102,13 @@ class CreationController
             if ($title && $description && $created_at) {
 
                 //
-                $addCreation = new Creation();                               
-                $addCreation->setTitle($title);
-                $addCreation->setDescription($description);
-                $addCreation->setCreated_at($created_at);
+                $addProduit = new Produit();
+                $addProduit->setTitle($title);
+                $addProduit->setDescription($description);
+                $addProduit->setCreated_at($created_at);
 
-                $addCreationModel = new CreationModel();
-                $success = $addCreationModel->create($addCreation); 
+                $addProduitModel = new ProduitModel();
+                $success = $addProduitModel->create($addProduit);
 
                 if ($success) {
                     http_response_code(201); // 200 OK
@@ -117,7 +116,7 @@ class CreationController
                 } else {
                     http_response_code(503); // 503 Service Unavailable
                     echo json_encode(["message" => "ERREUR lors de l'ajout de la création !"]);
-                } 
+                }
             } else {
                 http_response_code(400); // 400 Bad Request
                 echo json_encode(["message" => "Paramètres manquants !"]);
@@ -129,7 +128,7 @@ class CreationController
     }
 
     ////////////////////////////////////////
-    // METHODE POUR MODIFIER UNE CREATION //
+    // METHODE POUR MODIFIER UNE PRODUIT //
     ////////////////////////////////////////
     public function update()
     {
@@ -143,23 +142,23 @@ class CreationController
 
             $rawData = file_get_contents('php://input');
             $data = json_decode($rawData, true);
-            $id_creation = $data['id_creation'] ?? null;
+            $id_produit = $data['id_produit'] ?? null;
             $title = $data['title'] ?? null;
             $description = $data['description'] ?? null;
             $created_at = $data['created_at'] ?? null;
 
-            if ($id_creation && $title && $description && $created_at)
+            if ($id_produit && $title && $description && $created_at)
             {
-                $majCreation = new Creation(); 
-                $majCreation->setId_creation($id_creation);                              
-                $majCreation->setTitle($title);
-                $majCreation->setDescription($description);
-                $majCreation->setCreated_at($created_at);
+                $majProduit = new Produit();
+                $majProduit->setId_produit($id_produit);
+                $majProduit->setTitle($title);
+                $majProduit->setDescription($description);
+                $majProduit->setCreated_at($created_at);
 
-                $majCreationModel = new CreationModel();
-                $success = $majCreationModel->update($majCreation);
+                $majProduitModel = new ProduitModel();
+                $success = $majProduitModel->update($majProduit);
 
-                if ($success) {   
+                if ($success) {
                     http_response_code(200); // 200 OK
                     echo json_encode(["message" => "Création mise à jour avec succès !"]);
                 } else {
@@ -173,11 +172,11 @@ class CreationController
         } else {
             http_response_code(405); // 405 Method Not Allowed
             echo json_encode("Méthode non autorisée !");
-        } 
+        }
     }
 
     /////////////////////////////////////////
-    // METHODE POUR SUPPRIMER UNE CREATION //
+    // METHODE POUR SUPPRIMER UNE PRODUIT //
     /////////////////////////////////////////
     public function delete()
     {
@@ -191,15 +190,15 @@ class CreationController
 
             $rawData = file_get_contents('php://input');
             $data = json_decode($rawData, true);
-            $id_creation = $data['id_creation'] ?? null;
+            $id_produit = $data['id_produit'] ?? null;
 
-            if ($id_creation) {
+            if ($id_produit) {
 
-                $delCreation = new Creation();
-                $delCreation->setId_creation($id_creation);
-                
-                $delCreationModel = new CreationModel();
-                $success = $delCreationModel->delete($delCreation);
+                $delProduit = new Produit();
+                $delProduit->setId_produit($id_produit);
+
+                $delProduitModel = new ProduitModel();
+                $success = $delProduitModel->delete($delProduit);
 
                 if ($success) {
                     http_response_code(200); // 200 OK
@@ -217,4 +216,5 @@ class CreationController
             echo json_encode("Méthode non autorisée !");
         }
     }
+        */
 }
