@@ -41,7 +41,20 @@ class CommandeModel extends DbConnect
     {
         try {
             // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("SELECT * FROM com_produit_commande WHERE id_commande = :id_commande");
+            $this->request = $this->connection->prepare("SELECT
+                                                             pc.*,
+                                                             p.id_categorie,
+                                                             p.produit,
+                                                             p.marque,
+                                                             p.description,
+                                                             p.prix,
+                                                             p.image
+                                                         FROM
+                                                             com_produit_commande pc
+                                                         INNER JOIN com_produit p ON
+                                                             p.id_produit = pc.id_produit
+                                                         WHERE
+                                                             pc.id_commande = :id_commande");
 
             $this->request->bindValue(':id_commande', $id_commande, PDO::PARAM_INT);
 
