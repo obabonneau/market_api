@@ -31,13 +31,14 @@ class ProduitController
                 echo json_encode($produits);
             } else {
                 http_response_code(404); // 404 Not Found
-                echo json_encode(["message" => "Aucuns produits trouvés !"]);
+                echo json_encode(["message" => "Aucun produit trouvé !"]);
             }
         } else {
             http_response_code(405); // 405 Method Not Allowed
             echo json_encode(["message" => "Méthode non autorisée !"]);
         }
     }
+
     ////////////////////////////////////////
     // METHODE POUR AFFICHER UNE PRODUIT //
     ////////////////////////////////////////
@@ -78,6 +79,45 @@ class ProduitController
             echo json_encode("ERREUR : Méthode non autorisée !");
         }
     }
+
+    /////////////////////////////////////////////////////
+    // METHODE POUR LISTER LES PRODUITS PAR CATEGORIE //
+    /////////////////////////////////////////////////////
+    public function listByCategory()
+    {
+        // HEADER JSON
+        header("Access-Control-Allow-Origin: *");
+        header("Content-Type: application/json; charset=UTF-8");
+        header("Access-Control-Allow-Methods: GET");
+        header("Access-Control-Max-Age: 3600");
+        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
+
+            $id_categorie = $_GET["id_categorie"] ?? null;
+
+            if ($id_categorie) {
+
+                $readProduitModel = new ProduitModel();
+                $produits = $readProduitModel->readByCategory($id_categorie);
+
+                if ($produits) {
+                    http_response_code(200); // 200 OK
+                    echo json_encode($produits);
+                } else {
+                    http_response_code(404); // 404 Not Found
+                    echo json_encode(["message" => "Aucun produit trouvé !"]);
+                }
+            } else {
+                http_response_code(400); // 400 Bad Request
+                echo json_encode(["message" => "Paramètres manquants !"]);
+            }
+        } else {
+            http_response_code(405); // 405 Method Not Allowed
+            echo json_encode(["message" => "Méthode non autorisée !"]);
+        }
+    }
+
     /*
     /////////////////////////////////////
     // METHODE POUR CREER UNE PRODUIT //
