@@ -46,4 +46,42 @@ class CommandeController
             echo json_encode("ERREUR : Méthode non autorisée !");
         }
     }
+
+    //////////////////////////////////////////////////////
+    // METHODE POUR LISTER LES PRODUITS D'UNE COMMANDE //
+    //////////////////////////////////////////////////////
+    public function listProductsByOrder()
+    {
+        // HEADER JSON
+        header("Access-Control-Allow-Origin: *");
+        header("Content-Type: application/json; charset=UTF-8");
+        header("Access-Control-Allow-Methods: GET");
+        header("Access-Control-Max-Age: 3600");
+        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+        if ($_SERVER["REQUEST_METHOD"] === "GET") {
+
+            $id_commande = $_GET["id_commande"] ?? null;
+
+            if ($id_commande) {
+
+                $commandeModel = new CommandeModel();
+                $produits = $commandeModel->listProductsByOrder($id_commande);
+
+                if ($produits) {
+                    http_response_code(200); // 200 OK
+                    echo json_encode($produits);
+                } else {
+                    http_response_code(404); // 404 Not Found
+                    echo json_encode(["message" => "Produits de la commande non trouvés !"]);
+                }
+            } else {
+                http_response_code(400); // 400 Bad Request
+                echo json_encode(["message" => "Paramètres manquants !"]);
+            }
+        } else {
+            http_response_code(405); // 405 Method Not Allowed
+            echo json_encode("ERREUR : Méthode non autorisée !");
+        }
+    }
 }

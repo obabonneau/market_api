@@ -33,4 +33,29 @@ class CommandeModel extends DbConnect
             //die;
         }
     }
+
+    ///////////////////////////////////////////
+    // METHODE POUR LIRE LES PRODUITS D'UNE COMMANDE EN BDD //
+    ///////////////////////////////////////////
+    public function listProductsByOrder($id_commande)
+    {
+        try {
+            // PREPARATION DE LA REQUETE SQL
+            $this->request = $this->connection->prepare("SELECT * FROM com_produit_commande WHERE id_commande = :id_commande");
+
+            $this->request->bindValue(':id_commande', $id_commande, PDO::PARAM_INT);
+
+            // EXECUTION DE LA REQUETE SQL
+            $this->request->execute();
+
+            // FORMATAGE DU RESULTAT DE LA REQUETE
+            $produits = $this->request->fetchAll();
+
+            // RETOUR DU RESULTAT
+            return $produits;
+        } catch (PDOException $e) {
+            //echo $e->getMessage();
+            //die;
+        }
+    }
 }
