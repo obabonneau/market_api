@@ -1,22 +1,22 @@
 <?php
 
-////////////////////////////
-// CLASSE ET BDD PRODUIT //
-////////////////////////////
+// ---------------------
+// CLASSE ET BDD PRODUIT
+// ---------------------
 class Commande
 {
-    ///////////////
-    // ATTRIBUTS //
-    ///////////////
+    // ---------
+    // ATTRIBUTS
+    // ---------
     private $id_commande;
     private $id_statut;
     private $id_client;
     private $num_commande;
     private $date_commande;
 
-    ///////////////////////////////
-    // METHODES GETTER ET SETTER //
-    ///////////////////////////////
+    // -------------------------
+    // METHODES GETTER ET SETTER
+    // -------------------------
     public function getId_commande()
     {
         return $this->id_commande;

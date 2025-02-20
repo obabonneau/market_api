@@ -1,13 +1,13 @@
 <?php
 
-////////////////////////////
-// CLASSE ET BDD PRODUIT //
-////////////////////////////
+// ---------------------
+// CLASSE ET BDD PRODUIT
+// ---------------------
 class Produit
 {
-    ///////////////
-    // ATTRIBUTS //
-    ///////////////
+    // ---------
+    // ATTRIBUTS
+    // ---------
     private $id_produit;
     private $id_categorie;
     private $produit;
@@ -16,9 +16,9 @@ class Produit
     private $prix;
     private $image;
 
-    ///////////////////////////////
-    // METHODES GETTER ET SETTER //
-    ///////////////////////////////
+    // -------------------------
+    // METHODES GETTER ET SETTER
+    // -------------------------
     public function getId_produit()
     {
         return $this->id_produit;

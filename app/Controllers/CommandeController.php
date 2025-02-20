@@ -4,14 +4,14 @@
 require_once "../app/Entities/Commande.php";
 require_once "../app/Models/CommandeModel.php";
 
-////////////////////////////////////////////
-// CLASSE CONTROLEUR DE L'ENTITE PRODUIT //
-////////////////////////////////////////////
+// -------------------------------------
+// CLASSE CONTROLEUR DE L'ENTITE PRODUIT
+// -------------------------------------
 class CommandeController
 {
-    ///////////////////////////////////////
-    // METHODE POUR LISTER LES PRODUITS //
-    ///////////////////////////////////////
+    // --------------------------------
+    // METHODE POUR LISTER LES PRODUITS
+    // --------------------------------
     public function listByClient()
     {
         // HEADER JSON
@@ -47,9 +47,9 @@ class CommandeController
         }
     }
 
-    //////////////////////////////////////////////////////
-    // METHODE POUR LISTER LES PRODUITS D'UNE COMMANDE //
-    //////////////////////////////////////////////////////
+    // -----------------------------------------------
+    // METHODE POUR LISTER LES PRODUITS D'UNE COMMANDE
+    // -----------------------------------------------
     public function listProductsByOrder()
     {
         // HEADER JSON

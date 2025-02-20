@@ -4,14 +4,14 @@
 require_once "../app/Entities/Produit.php";
 require_once "../app/Models/ProduitModel.php";
 
-////////////////////////////////////////////
-// CLASSE CONTROLEUR DE L'ENTITE PRODUIT //
-////////////////////////////////////////////
+// -------------------------------------
+// CLASSE CONTROLEUR DE L'ENTITE PRODUIT
+// -------------------------------------
 class ProduitController
 {
-    ///////////////////////////////////////
-    // METHODE POUR LISTER LES PRODUITS //
-    ///////////////////////////////////////
+    // --------------------------------
+    // METHODE POUR LISTER LES PRODUITS
+    // --------------------------------
     public function list()
     {
         // HEADER JSON
@@ -39,9 +39,9 @@ class ProduitController
         }
     }
 
-    ////////////////////////////////////////
-    // METHODE POUR AFFICHER UNE PRODUIT //
-    ////////////////////////////////////////
+    // ---------------------------------
+    // METHODE POUR AFFICHER UNE PRODUIT
+    // ---------------------------------
     public function show()
     {
         // HEADER JSON
@@ -80,9 +80,9 @@ class ProduitController
         }
     }
 
-    /////////////////////////////////////////////////////
-    // METHODE POUR LISTER LES PRODUITS PAR CATEGORIE //
-    /////////////////////////////////////////////////////
+    // ----------------------------------------------
+    // METHODE POUR LISTER LES PRODUITS PAR CATEGORIE
+    // ----------------------------------------------
     public function listByCategory()
     {
         // HEADER JSON

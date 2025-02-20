@@ -3,14 +3,14 @@
 // UTILISATION DE CLASSES
 require_once "../App/Core/DbConnect.php";
 
-///////////////////////////////////////
-// CLASSE MODEL DE L'ENTITE PRODUIT //
-///////////////////////////////////////
+// --------------------------------
+// CLASSE MODEL DE L'ENTITE PRODUIT
+// --------------------------------
 class CommandeModel extends DbConnect
 {
-    ///////////////////////////////////////////
-    // METHODE POUR LIRE LES COMMANDES D'UN CLIENT EN BDD //
-    ///////////////////////////////////////////
+    // --------------------------------------------------
+    // METHODE POUR LIRE LES COMMANDES D'UN CLIENT EN BDD
+    // --------------------------------------------------
     public function readByClient($id_client)
     {
         try {
@@ -34,9 +34,9 @@ class CommandeModel extends DbConnect
         }
     }
 
-    ///////////////////////////////////////////
-    // METHODE POUR LIRE LES PRODUITS D'UNE COMMANDE EN BDD //
-    ///////////////////////////////////////////
+    // ----------------------------------------------------
+    // METHODE POUR LIRE LES PRODUITS D'UNE COMMANDE EN BDD
+    // ----------------------------------------------------
     public function listProductsByOrder($id_commande)
     {
         try {
