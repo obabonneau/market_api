@@ -124,7 +124,7 @@ class CommandeModel extends DbConnect
         } catch (PDOException $e) {
             // Rollback transaction
             $this->connection->rollback();
-            throw $e;
+            return false;
         }
     }
 }
