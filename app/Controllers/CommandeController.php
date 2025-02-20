@@ -84,4 +84,47 @@ class CommandeController
             echo json_encode("ERREUR : Méthode non autorisée !");
         }
     }
+
+    // -------------------------------
+    // METHODE POUR CREER UNE COMMANDE
+    // -------------------------------
+    public function add()
+    {
+        header("Access-Control-Allow-Origin: *");
+        header("Content-Type: application/json; charset=UTF-8");
+        header("Access-Control-Allow-Methods: POST");
+        header("Access-Control-Max-Age: 3600");
+        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $rawData = file_get_contents('php://input');
+            $data = json_decode($rawData, true);
+            $id_statut = $data['id_statut'] ?? null;
+            $id_client = $data['id_client'] ?? null;
+            $num_commande = $data['num_commande'] ?? null;
+            $date_commande = $data['date_commande'] ?? null;
+            $produits = $data['produits'] ?? [];
+
+            if ($id_statut && $id_client &&  $num_commande && $date_commande  && count($produits) !== 0) {
+
+                $commandeModel = new CommandeModel();
+                $success = $commandeModel->createOrder($id_statut, $id_client, $num_commande, $date_commande, $produits);
+
+                if ($success) {
+                    http_response_code(201); // 200 OK
+                    echo json_encode(["message" => "Commande crée avec succès !"]);
+                } else {
+                    http_response_code(503); // 503 Service Unavailable
+                    echo json_encode(["message" => "ERREUR lors de la création de la commande !"]);
+                }
+            } else {
+                http_response_code(400); // 400 Bad Request
+                echo json_encode(["message" => "Paramètres manquants !"]);
+            }
+        } else {
+            http_response_code(405); // 405 Method Not Allowed
+            echo json_encode("Méthode non autorisée !");
+        }
+    }
 }
