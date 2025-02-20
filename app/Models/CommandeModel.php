@@ -73,13 +73,16 @@ class CommandeModel extends DbConnect
     }
 
     // -------------------------------
-    // METHODE POUR CREER UNE COMMANDE ET LA RELIER A UN CLIENT
-    // (LA COMMANDE SERA "REMPLIE" DE PRODUITS VIA UNE AUTRE METHODE)
+    // METHODE POUR CREER UNE COMMANDE
     // -------------------------------
-    public function createClientOrder(Commande $commande)
+    public function createOrder($id_statut, $id_client, $num_commande, $date_commande, $produits)
     {
+
+        // Start transaction
+        $this->connection->beginTransaction();
+
         try {
-            // PREPARATION DE LA REQUETE SQL
+            // Insert command
             $this->request = $this->connection->prepare("INSERT INTO com_commande
                                                          VALUES
                                                          (NULL,
@@ -88,43 +91,40 @@ class CommandeModel extends DbConnect
                                                           :num_commande,
                                                           :date_commande)");
 
-            $this->request->bindValue(':id_statut', $commande->getId_statut());
-            $this->request->bindValue(':id_client', $commande->getId_client());
-            $this->request->bindValue(':num_commande', $commande->getNum_commande());
-            $this->request->bindValue(':date_commande', $commande->getDate_commande());
+            $this->request->bindValue(':id_statut', $id_statut);
+            $this->request->bindValue(':id_client', $id_client);
+            $this->request->bindValue(':num_commande', $num_commande);
+            $this->request->bindValue(':date_commande', $date_commande);
 
-            // EXECUTION DE LA REQUETE SQL
+            // EXECUTION DE LA 1ERE REQUETE SQL
             $this->request->execute();
+            $id_commande = $this->connection->lastInsertId();
 
-            // Récupération de l'ID de la commande crée avec lastInsertId()
-            $lastId = $this->connection->lastInsertId();
-            return $lastId;
+            // Insert command lines
+            $this->request = $this->connection->prepare("INSERT INTO com_produit_commande
+                                                         VALUES (NULL, :id_produit, :id_commande, :quantite, :prix)");
+
+            foreach ($produits as  $produit) {
+
+                $id_produit = $produit['id_produit'];
+                $quantite = $produit['quantite'];
+                $prix = $produit['prix'];
+
+                $this->request->bindValue(':id_produit', $id_produit);
+                $this->request->bindValue(':id_commande', $id_commande);
+                $this->request->bindValue(':quantite', $quantite);
+                $this->request->bindValue(':prix', $prix);
+
+                // EXECUTION DE LA 2E REQUETE SQL
+                $this->request->execute();
+            }
+
+            // Commit transaction
+            return $this->connection->commit();
         } catch (PDOException $e) {
-            //echo $e->getMessage();
-            //die;
-        }
-    }
-
-    // -------------------------------
-    // METHODE POUR AJOUTER UN PRODUIT DANS UNE COMMANDE (ICI, PAS DE LIEN AVEC UN CLIENT)
-    // -------------------------------
-    public function addProductToOrder($id_produit, $id_commande, $quantite)
-    {
-
-        try {
-            // PREPARATION DE LA REQUETE SQL
-            $this->request = $this->connection->prepare("INSERT INTO com_commande
-                                                         VALUES (NULL, :id_produit, :id_commande, :quantite)");
-
-            $this->request->bindValue(':id_produit', $id_produit);
-            $this->request->bindValue(':id_commande', $id_commande);
-            $this->request->bindValue(':quantite', $quantite);
-
-            // EXECUTION DE LA REQUETE SQL
-            return $this->request->execute();
-        } catch (PDOException $e) {
-            //echo $e->getMessage();
-            //die;
+            // Rollback transaction
+            $this->connection->rollback();
+            throw $e;
         }
     }
 }

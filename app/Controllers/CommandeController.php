@@ -100,40 +100,20 @@ class CommandeController
 
             $rawData = file_get_contents('php://input');
             $data = json_decode($rawData, true);
-            $id_client = $data['id_client'] ?? null;
             $id_statut = $data['id_statut'] ?? null;
+            $id_client = $data['id_client'] ?? null;
             $num_commande = $data['num_commande'] ?? null;
             $date_commande = $data['date_commande'] ?? null;
             $produits = $data['produits'] ?? [];
 
-            if ($id_client && $id_statut && $num_commande && $date_commande  && count($produits) !== 0) {
-
-                $commande = new Commande();
-                $commande->setId_client($id_client);
-                $commande->setId_statut($id_statut);
-                $commande->setNum_commande($num_commande);
-                $commande->setDate_commande($date_commande);
+            if ($id_statut && $id_client &&  $num_commande && $date_commande  && count($produits) !== 0) {
 
                 $commandeModel = new CommandeModel();
-                $lastId = $commandeModel->createClientOrder($commande);
+                $success = $commandeModel->createOrder($id_statut, $id_client, $num_commande, $date_commande, $produits);
 
-                if ($lastId) {
-
-                    $id_commande = $lastId;
-
-                    foreach ($produits as  $produit) {
-
-                        $id_produit = $produit['id_produit'];
-                        $quantite = $produit['quantite'];
-                        $success = $commandeModel->addProductToOrder($id_produit, $id_commande, $quantite);
-                    }
-                    if ($success) {
-                        http_response_code(201); // 200 OK
-                        echo json_encode(["message" => "Commande crée avec succès !"]);
-                    } else {
-                        http_response_code(503); // 503 Service Unavailable
-                        echo json_encode(["message" => "ERREUR lors de la création de la commande !"]);
-                    }
+                if ($success) {
+                    http_response_code(201); // 200 OK
+                    echo json_encode(["message" => "Commande crée avec succès !"]);
                 } else {
                     http_response_code(503); // 503 Service Unavailable
                     echo json_encode(["message" => "ERREUR lors de la création de la commande !"]);
