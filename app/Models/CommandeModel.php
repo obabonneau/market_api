@@ -75,13 +75,25 @@ class CommandeModel extends DbConnect
     // -------------------------------
     // METHODE POUR CREER UNE COMMANDE
     // -------------------------------
-    public function createOrder($id_statut, $id_client, $num_commande, $date_commande, $produits)
+    public function createOrder($id_statut, $id_client, $num_commande, $date_commande, $prenom, $nom, $email, $adresse, $cp, $ville, $produits)
     {
 
         // Start transaction
         $this->connection->beginTransaction();
 
         try {
+            // Insert client infos
+            $this->request = $this->connection->prepare("INSERT INTO com_infos_client
+                                                         VALUES (NUll, :prenom, :nom, :email, :adresse, :cp, :ville)");
+            $this->request->bindValue(':prenom', $prenom);
+            $this->request->bindValue(':nom', $nom);
+            $this->request->bindValue(':email', $email);
+            $this->request->bindValue(':adresse', $adresse);
+            $this->request->bindValue(':cp', $cp);
+            $this->request->bindValue(':ville', $ville);
+
+            $this->request->execute();
+
             // Insert command
             $this->request = $this->connection->prepare("INSERT INTO com_commande
                                                          VALUES
@@ -96,7 +108,6 @@ class CommandeModel extends DbConnect
             $this->request->bindValue(':num_commande', $num_commande);
             $this->request->bindValue(':date_commande', $date_commande);
 
-            // EXECUTION DE LA 1ERE REQUETE SQL
             $this->request->execute();
             $id_commande = $this->connection->lastInsertId();
 
@@ -115,14 +126,14 @@ class CommandeModel extends DbConnect
                 $this->request->bindValue(':quantite', $quantite);
                 $this->request->bindValue(':prix', $prix);
 
-                // EXECUTION DE LA 2E REQUETE SQL
                 $this->request->execute();
             }
 
-            // Commit transaction
+            // Commit transaction : Toutes les requetes ont réussi donc OK
             return $this->connection->commit();
         } catch (PDOException $e) {
-            // Rollback transaction
+            // Rollback transaction :
+            // Une des requetes a échoué, donc celles qui avaient sont annulées pour éviter de corrompre l'intégrité de la BDD
             $this->connection->rollback();
             return false;
         }

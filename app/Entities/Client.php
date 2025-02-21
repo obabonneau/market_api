@@ -8,7 +8,6 @@ class Client
   // ----------
   // ATTRIBUTS
   // ----------
-  ///////////////
   private $id_client;
   private $prenom;
   private $nom;

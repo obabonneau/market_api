@@ -104,12 +104,18 @@ class CommandeController
             $id_client = $data['id_client'] ?? null;
             $num_commande = $data['num_commande'] ?? null;
             $date_commande = $data['date_commande'] ?? null;
+            $prenom = $data['prenom'] ?? null;
+            $nom = $data['nom'] ?? null;
+            $email = $data['email'] ?? null;
+            $adresse = $data['adresse'] ?? null;
+            $cp = $data['cp'] ?? null;
+            $ville = $data['ville'] ?? null;
             $produits = $data['produits'] ?? [];
 
-            if ($id_statut && $id_client &&  $num_commande && $date_commande  && count($produits) !== 0) {
+            if ($id_statut && $id_client &&  $num_commande && $date_commande && $prenom && $nom && $email && $adresse && $cp && $ville  && count($produits) !== 0) {
 
                 $commandeModel = new CommandeModel();
-                $success = $commandeModel->createOrder($id_statut, $id_client, $num_commande, $date_commande, $produits);
+                $success = $commandeModel->createOrder($id_statut, $id_client, $num_commande, $date_commande, $prenom, $nom, $email, $adresse, $cp, $ville, $produits);
 
                 if ($success) {
                     http_response_code(201); // 200 OK
