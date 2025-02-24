@@ -100,10 +100,10 @@ class CommandeController
 
             $rawData = file_get_contents('php://input');
             $data = json_decode($rawData, true);
-            $id_statut = $data['id_statut'] ?? null;
+            $id_statut = 2;
             $id_client = $data['id_client'] ?? null;
-            $num_commande = $data['num_commande'] ?? null;
-            $date_commande = $data['date_commande'] ?? null;
+            $num_commande = (new DateTime())->getTimestamp();
+            $date_commande = (new DateTime())->format('Y-m-d');
             $prenom = $data['prenom'] ?? null;
             $nom = $data['nom'] ?? null;
             $email = $data['email'] ?? null;
@@ -130,7 +130,7 @@ class CommandeController
             }
         } else {
             http_response_code(405); // 405 Method Not Allowed
-            echo json_encode("Méthode non autorisée !");
+            echo json_encode(["message" => "Méthode non autorisée !"]);
         }
     }
 }
