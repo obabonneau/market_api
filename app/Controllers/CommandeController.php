@@ -100,8 +100,7 @@ class CommandeController
 
             $rawData = file_get_contents('php://input');
             $data = json_decode($rawData, true);
-            $id_statut = 2;
-            $id_client = $data['id_client'] ?? null;
+            $id_statut = $data['id_statut'] ?? null;
             $num_commande = (new DateTime())->getTimestamp();
             $date_commande = (new DateTime())->format('Y-m-d');
             $prenom = $data['prenom'] ?? null;
@@ -112,10 +111,9 @@ class CommandeController
             $ville = $data['ville'] ?? null;
             $produits = $data['produits'] ?? [];
 
-            if ($id_statut && $id_client &&  $num_commande && $date_commande && $prenom && $nom && $email && $adresse && $cp && $ville  && count($produits) !== 0) {
-
+            if ($id_statut &&  $prenom && $nom && $email && $adresse && $cp && $ville && count($produits) > 0) {
                 $commandeModel = new CommandeModel();
-                $success = $commandeModel->createOrder($id_statut, $id_client, $num_commande, $date_commande, $prenom, $nom, $email, $adresse, $cp, $ville, $produits);
+                $success = $commandeModel->createOrder($id_statut, $num_commande, $date_commande, $prenom, $nom, $email, $adresse, $cp, $ville, $produits);
 
                 if ($success) {
                     http_response_code(201); // 200 OK

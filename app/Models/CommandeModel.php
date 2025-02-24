@@ -75,33 +75,41 @@ class CommandeModel extends DbConnect
     // -------------------------------
     // METHODE POUR CREER UNE COMMANDE
     // -------------------------------
-    public function createOrder($id_statut, $id_client, $num_commande, $date_commande, $prenom, $nom, $email, $adresse, $cp, $ville, $produits)
+    public function createOrder($id_statut, $num_commande, $date_commande, $prenom, $nom, $email, $adresse, $cp, $ville, $produits)
     {
+        // get the client if it exist, otherwise get false
+        $this->request = $this->connection->prepare("SELECT * FROM com_infos_client WHERE email = :email");
+        $this->request->bindValue(':email', $email);
+        $this->request->execute();
+        $client = $this->request->fetch();
 
         // Start transaction
         $this->connection->beginTransaction();
 
         try {
-            // Insert client infos
-            $this->request = $this->connection->prepare("INSERT INTO com_infos_client
-                                                         VALUES (NUll, :prenom, :nom, :email, :adresse, :cp, :ville)");
-            $this->request->bindValue(':prenom', $prenom);
-            $this->request->bindValue(':nom', $nom);
-            $this->request->bindValue(':email', $email);
-            $this->request->bindValue(':adresse', $adresse);
-            $this->request->bindValue(':cp', $cp);
-            $this->request->bindValue(':ville', $ville);
+            // create the client if it does not exist
+            if ($client === false) {
+                // Insert client infos
+                $this->request = $this->connection->prepare("INSERT INTO com_infos_client
+                                                             VALUES (NULL, :prenom, :nom, :email, :adresse, :cp, :ville)");
 
-            $this->request->execute();
+                $this->request->bindValue(':prenom', $prenom);
+                $this->request->bindValue(':nom', $nom);
+                $this->request->bindValue(':email', $email);
+                $this->request->bindValue(':adresse', $adresse);
+                $this->request->bindValue(':cp', $cp);
+                $this->request->bindValue(':ville', $ville);
+
+                $this->request->execute();
+                $id_client = $this->connection->lastInsertId();
+            } else {
+                // get already existing client id
+                $id_client = $client->id_client;
+            }
 
             // Insert command
             $this->request = $this->connection->prepare("INSERT INTO com_commande
-                                                         VALUES
-                                                         (NULL,
-                                                          :id_statut,
-                                                          :id_client,
-                                                          :num_commande,
-                                                          :date_commande)");
+                                                         VALUES (NULL, :id_statut, :id_client, :num_commande, :date_commande)");
 
             $this->request->bindValue(':id_statut', $id_statut);
             $this->request->bindValue(':id_client', $id_client);
@@ -115,8 +123,7 @@ class CommandeModel extends DbConnect
             $this->request = $this->connection->prepare("INSERT INTO com_produit_commande
                                                          VALUES (NULL, :id_produit, :id_commande, :quantite, :prix)");
 
-            foreach ($produits as  $produit) {
-
+            foreach ($produits as $produit) {
                 $id_produit = $produit['id_produit'];
                 $quantite = $produit['quantite'];
                 $prix = $produit['prix'];
@@ -133,7 +140,8 @@ class CommandeModel extends DbConnect
             return $this->connection->commit();
         } catch (PDOException $e) {
             // Rollback transaction :
-            // Une des requetes a échoué, donc celles qui avaient sont annulées pour éviter de corrompre l'intégrité de la BDD
+            // Toutes les requetes n'ont pas réussie, donc celles qui avaient réussies sont annulées pour éviter de corrompre l'intégrité de la BDD
+            var_dump(($e));
             $this->connection->rollback();
             return false;
         }
