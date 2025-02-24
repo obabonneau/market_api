@@ -100,7 +100,7 @@ class CommandeController
 
             $rawData = file_get_contents('php://input');
             $data = json_decode($rawData, true);
-            $id_statut = $data['id_statut'] ?? null;
+            $id_statut = 2; // statut "En cours"
             $num_commande = (new DateTime())->getTimestamp();
             $date_commande = (new DateTime())->format('Y-m-d');
             $prenom = $data['prenom'] ?? null;
