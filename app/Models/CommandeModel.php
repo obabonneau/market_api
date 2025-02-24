@@ -141,7 +141,6 @@ class CommandeModel extends DbConnect
         } catch (PDOException $e) {
             // Rollback transaction :
             // Toutes les requetes n'ont pas réussie, donc celles qui avaient réussies sont annulées pour éviter de corrompre l'intégrité de la BDD
-            var_dump(($e));
             $this->connection->rollback();
             return false;
         }
