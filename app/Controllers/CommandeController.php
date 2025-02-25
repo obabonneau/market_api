@@ -101,8 +101,8 @@ class CommandeController
             $rawData = file_get_contents('php://input');
             $data = json_decode($rawData, true);
             $id_statut = 2; // statut "En cours"
-            $num_commande = (new DateTime())->getTimestamp();
-            $date_commande = (new DateTime())->format('Y-m-d');
+            $num_commande = $data['num_commande'] ?? null;
+            $date_commande = $data['date_commande'] ?? null;
             $prenom = $data['prenom'] ?? null;
             $nom = $data['nom'] ?? null;
             $email = $data['email'] ?? null;
@@ -111,7 +111,7 @@ class CommandeController
             $ville = $data['ville'] ?? null;
             $produits = $data['produits'] ?? [];
 
-            if ($id_statut &&  $prenom && $nom && $email && $adresse && $cp && $ville && count($produits) > 0) {
+            if ($id_statut && $num_commande && $date_commande && $prenom && $nom && $email && $adresse && $cp && $ville && count($produits) > 0) {
                 $commandeModel = new CommandeModel();
                 $success = $commandeModel->createOrder($id_statut, $num_commande, $date_commande, $prenom, $nom, $email, $adresse, $cp, $ville, $produits);
 
