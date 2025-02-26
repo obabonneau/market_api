@@ -1,7 +1,11 @@
 <?php
 
+// AFFICHAGE DES ERREURS PHP
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
 // UTILISATION DE CLASSES
-require_once "../App/Core/Router.php";
+require_once "../app/Core/Router.php";
 
 // INSTANCIATION D'UN OBJET "routeur"
 $routeur = new Router();

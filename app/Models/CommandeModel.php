@@ -1,7 +1,7 @@
 <?php
 
 // UTILISATION DE CLASSES
-require_once "../App/Core/DbConnect.php";
+require_once "../app/Core/DbConnect.php";
 
 // --------------------------------
 // CLASSE MODEL DE L'ENTITE PRODUIT
